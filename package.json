@@ -1,0 +1,21 @@
+{
+  "name": "projetocomp5",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "run-p runFront runBack",
+    "runFront": "cd ./FrontEnd & cd ./my_app & npm start",
+    "runBack": "cd ./BackEnd & node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/LooperBR/ProjetoComp5.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/LooperBR/ProjetoComp5/issues"
+  },
+  "homepage": "https://github.com/LooperBR/ProjetoComp5#readme"
+}
