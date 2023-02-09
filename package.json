@@ -6,7 +6,7 @@
   "scripts": {
     "start": "run-p runFront runBack",
     "runFront": "cd ./FrontEnd & cd ./my_app & npm start",
-    "runBack": "cd ./BackEnd & node index.js"
+    "runBack": "cd ./BackEnd & npm start"
   },
   "repository": {
     "type": "git",
