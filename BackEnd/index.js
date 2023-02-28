@@ -2,13 +2,14 @@ import express from "express";
 //import Conexao from './libraries/Conexao.js'
 import cors from "cors";
 import bodyParser from "body-parser";
-import banco from "./banco.json" assert { type: "json" };
 
 const app = express();
 
 const corsOptions = {
   origin: "http://localhost:3000",
 };
+
+const usuarios = [{ login: "admin", senha: "admin" },{ login: "joao", senha: "teste" }];
 
 const atividades = [
   {
@@ -33,15 +34,23 @@ const urlEncodedParser = bodyParser.urlencoded({ extended: false });
 
 app.use(cors(corsOptions));
 
-app.post("/teste", jsonParser, (req, res) => {
+app.get("/teste", jsonParser, (req, res) => {
   console.log(req.body);
-  res.send(req.body);
+  res.send("hello world");
 });
 
 app.post("/login", jsonParser, (req, res) => {
-  console.log('express');
-  console.log(req.body);
-  res.send(req.body);
+  console.log("login");
+  let autenticado = false
+  let usuario = usuarios.find((usuario) => {
+    return usuario.login == req.body.login && usuario.senha == req.body.senha;
+  });
+  if (usuario) {
+    autenticado = true
+  } else {
+    autenticado = false
+  }
+  res.send(autenticado);
 });
 
 app.listen(9001, () => {

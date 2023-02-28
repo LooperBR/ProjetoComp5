@@ -10,6 +10,9 @@ function NavBar() {
                 <li>
                     <Link to="fdshgjsdkjhdsj">Erro</Link>
                 </li>
+                <li>
+                    <Link to="">logout</Link>
+                </li>
             </ul>
         </nav>
     );
