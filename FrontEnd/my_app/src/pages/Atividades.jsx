@@ -1,24 +1,10 @@
-import { useEffect } from "react";
-import { useCookies } from "react-cookie";
-import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
-export default function Main() {
-    const navigate = useNavigate();
-    const [cookies, setCookie] = useCookies(["user"]);
-    useEffect(()=>{
-        if (!cookies.username) {
-            console.log("nao tem cookie")
-            navigate("/");
-        }else{
-            console.log("tem cookie")
-            console.log(cookies)
-        }
-    },[]);
-    
-
-    return (
+export default function Atividades(){
+    return(
         <div>
-            <h1>Main testando</h1>
+            <h1>Atividades</h1>
+            <Link to="../nova_atividade">Nova Atividade</Link>
             <div style={{backgroundColor: "yellow"}}>
                 <h2>Atividade 1</h2>
                 <p>descrição da atividade</p>
@@ -31,6 +17,13 @@ export default function Main() {
                 <p>tempo restante 1:08:23:00</p>
                 <button>Concluir atividades</button>
             </div>
+            <div style={{backgroundColor: "yellow"}}>
+                <h2>Atividade 3</h2>
+                <p>descrição da atividade</p>
+                <p>tempo restante 23:09:10:56</p>
+                <button>Concluir atividades</button>
+            </div>
+            
         </div>
-    );
+    )
 }

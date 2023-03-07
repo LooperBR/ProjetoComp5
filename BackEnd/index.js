@@ -1,7 +1,8 @@
-import express from "express";
+import express, { response } from "express";
 //import Conexao from './libraries/Conexao.js'
 import cors from "cors";
 import bodyParser from "body-parser";
+import crypto from'crypto';
 
 const app = express();
 
@@ -28,6 +29,8 @@ const atividades = [
   },
 ];
 
+let sessoes =[]
+
 const jsonParser = bodyParser.json();
 
 const urlEncodedParser = bodyParser.urlencoded({ extended: false });
@@ -39,18 +42,42 @@ app.get("/teste", jsonParser, (req, res) => {
   res.send("hello world");
 });
 
+app.get("/sessoes", jsonParser, (req, res) => {
+  console.log(sessoes);
+  res.send("hello world");
+});
+
 app.post("/login", jsonParser, (req, res) => {
   console.log("login");
-  let autenticado = false
   let usuario = usuarios.find((usuario) => {
     return usuario.login == req.body.login && usuario.senha == req.body.senha;
   });
   if (usuario) {
-    autenticado = true
+    
+    sessoes.find((sessao,i)=>{
+      if(sessao.login == req.body.login){
+        sessoes.splice(i,1)
+        return true
+      }
+    })
+
+    let session_token = crypto.randomBytes(40).toString('hex')
+    while(sessoes.find((sessao) => {
+      return sessao.token == session_token;
+    })){
+      session_token = crypto.randomBytes(40).toString('hex')
+    }
+    sessoes.push(
+      {
+        "login": usuario.login,
+        "token": session_token
+      }
+    )
+    let retorno = {"token":session_token}
+    res.send(retorno);
   } else {
-    autenticado = false
+    res.status(404).send({"error":"user not found"});
   }
-  res.send(autenticado);
 });
 
 app.listen(9001, () => {

@@ -21,8 +21,8 @@ export default async function RequestHTTP(
 
   return new Promise((resolve) => {
     xmlHttp.onreadystatechange = function () {
-      if (xmlHttp.readyState == 4 && xmlHttp.status == 200) {
-        resolve(xmlHttp.responseText);
+      if (xmlHttp.readyState == 4) {
+        resolve(xmlHttp);
       }
     };
   });
