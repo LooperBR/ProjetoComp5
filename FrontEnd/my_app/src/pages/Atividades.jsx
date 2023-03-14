@@ -1,29 +1,48 @@
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import Atividade from "../components/Atividade";
+import RequestHTTP from "../libraries/RequestHTTP";
+import { useCookies } from "react-cookie";
 
 export default function Atividades(){
+    const [cookies, setCookie] = useCookies(["user"]);
+    const [atividades,setAtividade] = useState([])
+
+    useEffect(()=>{
+        async function PegaDados(){
+            let options = [
+                "GET",
+                "http://localhost:9001/atividades",
+                [
+                    {
+                        header: "authorization",
+                        value: "Bearer "+cookies.token,
+                    }
+                ]
+              ];
+              let atividadesHTTP = await RequestHTTP(...options)
+              console.log("atividades")
+              console.log(atividadesHTTP)
+              console.log(atividadesHTTP.responseText)
+              console.log(atividades)
+              setAtividade(JSON.parse(atividadesHTTP.responseText));
+              
+        }
+        PegaDados()
+        
+    },[])
+    
     return(
         <div>
             <h1>Atividades</h1>
-            <Link to="../nova_atividade">Nova Atividade</Link>
-            <div style={{backgroundColor: "yellow"}}>
-                <h2>Atividade 1</h2>
-                <p>descrição da atividade</p>
-                <p>tempo restante 12:00:00</p>
-                <button>Concluir atividades</button>
-            </div>
-            <div style={{backgroundColor: "yellow"}}>
-                <h2>Atividade 2</h2>
-                <p>descrição da atividade</p>
-                <p>tempo restante 1:08:23:00</p>
-                <button>Concluir atividades</button>
-            </div>
-            <div style={{backgroundColor: "yellow"}}>
-                <h2>Atividade 3</h2>
-                <p>descrição da atividade</p>
-                <p>tempo restante 23:09:10:56</p>
-                <button>Concluir atividades</button>
-            </div>
-            
+            <p><Link to="../nova_atividade">Nova Atividade</Link></p>
+
+            {atividades!=undefined && atividades.length>0?
+                atividades.map((atividade)=>{
+                    return (<Atividade key={atividade.id} id={atividade.id} titulo={atividade.titulo} descricao={atividade.descricao} data_limite={atividade.dataLimite}/>)
+                }):"Não existem atividades pendentes"
+            }
+
         </div>
     )
 }
