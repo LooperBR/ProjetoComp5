@@ -3,7 +3,7 @@ import express, { response } from "express";
 import cors from "cors";
 import bodyParser from "body-parser";
 import crypto from'crypto';
-
+import {query} from './libraries/database.js'
 const app = express();
 
 const corsOptions = {
@@ -56,6 +56,7 @@ app.use(cors(corsOptions));
 
 app.get("/teste", jsonParser, (req, res) => {
   console.log(req.body);
+  console.log(sessoes);
   res.send("hello world");
 });
 
@@ -72,15 +73,12 @@ app.get("/sessoes", jsonParser, (req, res) => {
   
 });
 
-app.get("/atividades", jsonParser, (req, res) => {
+app.get("/checa_sessao", jsonParser, (req, res) => {
   let usuario = validaSessao(req)
   console.log(usuario)
-  console.log(req.headers['authorization'])
+  console.log(sessoes);
   if(usuario){
-    let atividades_usuario = atividades.filter((atividade)=>{
-      return atividade.usuario == usuario.login
-    })
-    res.send(atividades_usuario);
+    res.send("hello world");
   }else{
     res.status(401).send({"error":"Bearer token invalid or not found"});
   }
@@ -88,15 +86,31 @@ app.get("/atividades", jsonParser, (req, res) => {
   
 });
 
-app.post("/login", jsonParser, (req, res) => {
+app.get("/atividades", jsonParser, async(req, res) => {
+  let usuario = validaSessao(req)
+  console.log(usuario)
+  console.log(req.headers['authorization'])
+  if(usuario){
+    let atividades_usuario = await query('SELECT a.* FROM atividade a INNER JOIN usuario u ON u.id = a.usuario_id WHERE u.login = ?',[usuario.login])
+    // let atividades_usuario = atividades.filter((atividade)=>{
+    //   return atividade.usuario == usuario.login
+    // })
+    res.send(atividades_usuario[0]);
+  }else{
+    res.status(401).send({"error":"Bearer token invalid or not found"});
+  }
+  
+  
+});
+
+app.post("/login", jsonParser, async(req, res) => {
   console.log("login");
-  let usuario = usuarios.find((usuario) => {
-    return usuario.login == req.body.login && usuario.senha == req.body.senha;
-  });
-  if (usuario) {
+  let usuario = await query('SELECT * FROM usuario WHERE login = ? AND senha = ?;',[req.body.login,req.body.senha]);
+  console.log(usuario[0])
+  if (usuario[0].length>0) {
     
     sessoes.find((sessao,i)=>{
-      if(sessao.login == req.body.login){
+      if(sessao.login.toLowerCase() == req.body.login.toLowerCase()){
         sessoes.splice(i,1)
         return true
       }
@@ -110,7 +124,7 @@ app.post("/login", jsonParser, (req, res) => {
     }
     sessoes.push(
       {
-        "login": usuario.login,
+        "login": usuario[0][0].login,
         "token": session_token
       }
     )

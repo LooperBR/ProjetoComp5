@@ -7,14 +7,13 @@ export default function Atividade({id,titulo,descricao,data_limite}){
         hora:0,
         dia:0
       })
-    console.log("caralho")
+    
     useEffect(()=>{
-        console.log("caralho2")
+        
         let intervalo = setInterval(()=>{
             let data_atual = new Date()
             let data_limitecerto = new Date(data_limite)
-            console.log(data_atual)
-            console.log(data_limitecerto)
+
             let diff = data_limitecerto-data_atual
             diff/=1000
 
@@ -40,7 +39,7 @@ export default function Atividade({id,titulo,descricao,data_limite}){
             <p>{descricao}</p>
             <p>tempo restante {tempo.dia}:{tempo.hora}:{tempo.minuto}:{tempo.segundo}</p>
             <p>até {data_limite.toString()}</p>
-            <button>Concluir atividades</button>
+            <button>Concluir atividade</button>
         </div>
     )
 }
