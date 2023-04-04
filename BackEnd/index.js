@@ -10,41 +10,18 @@ const corsOptions = {
   origin: "http://localhost:3000",
 };
 
-const usuarios = [{ login: "admin", senha: "admin" },{ login: "joao", senha: "teste" }];
 
-const atividades = [
-  {
-    id: 1,
-    titulo: "teste",
-    dataLimite: new Date(2023, 9, 9),
-    descricao: "testando saporra",
-    diario: false,
-    usuario: "admin"
-  },
-  {
-    id: 2,
-    titulo: "teste2",
-    dataLimite: new Date(2023, 5, 27),
-    descricao: "testando saporra2",
-    diario: false,
-    usuario: "admin"
-  },
-];
-
-let sessoes =[]
 
 const jsonParser = bodyParser.json();
 
 const urlEncodedParser = bodyParser.urlencoded({ extended: false });
 
-function validaSessao(req){
+async function validaSessao(req){
   let authorization = req.headers['authorization']
   if(authorization){
     let bearer = authorization.substring(7)
-    let usuario = sessoes.find((sessao) => {
-      return sessao.token == bearer
-    })
-    return usuario
+    let usuario = await query('select usuario_id from token where token = ?',[bearer])
+    return usuario[0][0].usuario_id
   }else{
     return undefined
   }
@@ -52,19 +29,33 @@ function validaSessao(req){
 
 }
 
+async function createNewToken(id){
+  await query('delete from token where usuario_id = ?;',[id])
+
+  let session_token = crypto.randomBytes(40).toString('hex')
+
+  let existe = await query('select * from token where token = ?',[session_token]);
+  while(existe[0].length>0){
+      session_token = crypto.randomBytes(40).toString('hex')
+      existe = await query('select * from token where token = ?',[session_token]);
+  }
+
+  await query('insert into token(usuario_id,token) values(?,?);',[id,session_token])
+  
+  return session_token
+}
+
 app.use(cors(corsOptions));
 
 app.get("/teste", jsonParser, (req, res) => {
   console.log(req.body);
-  console.log(sessoes);
   res.send("hello world");
 });
 
-app.get("/sessoes", jsonParser, (req, res) => {
-  let usuario = validaSessao(req)
-  console.log(usuario)
-  console.log(sessoes);
-  if(usuario){
+app.get("/sessoes", jsonParser, async (req, res) => {
+  let usuario_id = await validaSessao(req)
+  console.log(usuario_id)
+  if(usuario_id){
     res.send("hello world");
   }else{
     res.status(401).send({"error":"Bearer token invalid or not found"});
@@ -73,11 +64,10 @@ app.get("/sessoes", jsonParser, (req, res) => {
   
 });
 
-app.get("/checa_sessao", jsonParser, (req, res) => {
-  let usuario = validaSessao(req)
-  console.log(usuario)
-  console.log(sessoes);
-  if(usuario){
+app.get("/checa_sessao", jsonParser, async (req, res) => {
+  let usuario_id = await validaSessao(req)
+  console.log(usuario_id)
+  if(usuario_id){
     res.send("hello world");
   }else{
     res.status(401).send({"error":"Bearer token invalid or not found"});
@@ -86,12 +76,12 @@ app.get("/checa_sessao", jsonParser, (req, res) => {
   
 });
 
-app.get("/atividades", jsonParser, async(req, res) => {
-  let usuario = validaSessao(req)
-  console.log(usuario)
+app.get("/atividades", jsonParser, async (req, res) => {
+  let usuario_id = await validaSessao(req)
+  console.log(usuario_id)
   console.log(req.headers['authorization'])
-  if(usuario){
-    let atividades_usuario = await query('SELECT a.* FROM atividade a INNER JOIN usuario u ON u.id = a.usuario_id WHERE u.login = ?',[usuario.login])
+  if(usuario_id){
+    let atividades_usuario = await query('SELECT a.* FROM atividade a  WHERE a.usuario_id = ?',[usuario_id])
     // let atividades_usuario = atividades.filter((atividade)=>{
     //   return atividade.usuario == usuario.login
     // })
@@ -103,32 +93,28 @@ app.get("/atividades", jsonParser, async(req, res) => {
   
 });
 
+app.post("/cadastro", jsonParser, async(req, res) => {
+  
+  let usuario = await query('SELECT * FROM usuario WHERE login = ?;',[req.body.login])
+  if(usuario[0].length>0){
+    res.status(400).send({"error":"username already in use"})
+    return
+  }
+  usuario = await query('CALL insere_usuario(?,?,?)',[req.body.nome,req.body.login,req.body.senha])
+  let token = await createNewToken(usuario[0][0][0].id)
+  console.log("teste")
+  res.send({"token": token});
+  
+});
+
+
 app.post("/login", jsonParser, async(req, res) => {
   console.log("login");
   let usuario = await query('SELECT * FROM usuario WHERE login = ? AND senha = ?;',[req.body.login,req.body.senha]);
   console.log(usuario[0])
   if (usuario[0].length>0) {
-    
-    sessoes.find((sessao,i)=>{
-      if(sessao.login.toLowerCase() == req.body.login.toLowerCase()){
-        sessoes.splice(i,1)
-        return true
-      }
-    })
-
-    let session_token = crypto.randomBytes(40).toString('hex')
-    while(sessoes.find((sessao) => {
-      return sessao.token == session_token;
-    })){
-      session_token = crypto.randomBytes(40).toString('hex')
-    }
-    sessoes.push(
-      {
-        "login": usuario[0][0].login,
-        "token": session_token
-      }
-    )
-    let retorno = {"token":session_token}
+    let token = await createNewToken(usuario[0][0].id)
+    let retorno = {"token":token}
     res.send(retorno);
   } else {
     res.status(404).send({"error":"user not found"});

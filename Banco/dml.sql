@@ -34,6 +34,14 @@ INSERT INTO atividade_repete(atividade_id,dia_semana) VALUES(3,4);
 INSERT INTO atividade_repete(atividade_id,dia_semana) VALUES(3,5);
 INSERT INTO atividade_repete(atividade_id,dia_semana) VALUES(3,6);
 
+INSERT INTO atividade_completacao(data_inicio,data_fim,atividade_id) VALUES('2023-03-20','2023-03-20',1);
+INSERT INTO atividade_completacao(data_inicio,data_fim,data_completacao,atividade_id) VALUES('2023-03-21','2023-03-21','2023-03-21',1);
+INSERT INTO atividade_completacao(data_inicio,data_fim,atividade_id) VALUES('2023-04-20','2023-04-20',1);
+INSERT INTO atividade_completacao(data_inicio,data_fim,atividade_id) VALUES('2023-03-20','2023-03-20',2);
+INSERT INTO atividade_completacao(data_inicio,data_fim,atividade_id) VALUES('2023-03-20','2023-03-20',3);
+INSERT INTO atividade_completacao(data_inicio,data_fim,atividade_id) VALUES('2023-03-21','2023-03-21',3);
+INSERT INTO atividade_completacao(data_inicio,data_fim,atividade_id) VALUES('2023-04-01','2023-04-30',3);
+
 SELECT * FROM avatar;
 SELECT * FROM usuario;
 SELECT * FROM tipo_atividade;

@@ -6,12 +6,14 @@ import Login from './pages/Login'
 import Perfil from './pages/Perfil';
 import Atividades from './pages/Atividades';
 import NovaAtividade from './pages/NovaAtividade';
+import Cadastro from './pages/Cadastro';
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
         <Route index element={<Login />} />
+        <Route path="/cadastro" element={<Cadastro />} />
         <Route path="/" element={<Layout />}>
           <Route path="home" element={<Main />} />
           <Route path="perfil" element={<Perfil />} />

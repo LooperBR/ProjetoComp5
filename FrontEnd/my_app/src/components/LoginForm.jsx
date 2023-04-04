@@ -8,12 +8,43 @@ export default function LoginForm() {
   const navigate = useNavigate();
 
   useEffect(()=>{
-    if (cookies.username) {
-      console.log("tem cookie")
-      console.log(cookies)
-      navigate("/home");
+    async function checalogin(){
+      let options = [
+        "GET",
+        "http://localhost:9001/checa_sessao",
+        [
+          {
+              header: "authorization",
+              value: "Bearer "+cookies.token,
+          }
+        ]
+      ];
+      let login = await RequestHTTP(...options);
+      console.log(login)
+      //console.log(login.response)
+      if (!login || login.status == 404) {
+          console.log("nao tem cookie")
+      }else{
+          console.log("tem cookie")
+          console.log(cookies)
+          navigate("/home");
+      }
     }
+    if(cookies.username){
+      checalogin()
+    }
+    
   },[]);
+
+  const styleRightForm = {
+    color: "blue",
+    backgroundColor : "white"
+  }
+  
+  const styleWrongForm = {
+    color: "red",
+    backgroundColor : "yellow"
+  }
 
   async function handleSubmit(e) {
     e.preventDefault();
@@ -42,19 +73,28 @@ export default function LoginForm() {
       console.log("redireciona");
       navigate("/home");
     }else{
+      const formulario = document.getElementById("formulario")
+      formulario.style.color = styleWrongForm.color
+      formulario.style.backgroundColor = styleWrongForm.backgroundColor
       console.log("login incorreto")
     }
   }
 
+  function resetFormStyle(){
+    const formulario = document.getElementById("formulario")
+    formulario.style.color = styleRightForm.color
+    formulario.style.backgroundColor = styleRightForm.backgroundColor
+  }
+
   return (
-    <form onSubmit={handleSubmit}>
+    <form id="formulario" style={styleRightForm} onSubmit={handleSubmit}>
       <label htmlFor="login">login:</label>
       <br />
-      <input type="text" id="login" name="login" />
+      <input type="text" id="login" name="login" onChange={resetFormStyle}/>
       <br />
       <label htmlFor="senha">senha:</label>
       <br />
-      <input type="password" id="senha" name="senha" />
+      <input type="password" id="senha" name="senha" onChange={resetFormStyle}/>
       <br></br>
       <input type="submit" value="Logar" />
     </form>
