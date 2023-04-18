@@ -20,8 +20,13 @@ async function validaSessao(req){
   let authorization = req.headers['authorization']
   if(authorization){
     let bearer = authorization.substring(7)
-    let usuario = await query('select usuario_id from token where token = ?',[bearer])
-    return usuario[0][0].usuario_id
+    let usuario = await query('select usuario_id from token where token = ? and data_limite > NOW()',[bearer])
+    if(usuario[0].length>0){
+      return usuario[0][0].usuario_id
+    }else{
+      return undefined
+    }
+    
   }else{
     return undefined
   }
@@ -40,7 +45,10 @@ async function createNewToken(id){
       existe = await query('select * from token where token = ?',[session_token]);
   }
 
-  await query('insert into token(usuario_id,token) values(?,?);',[id,session_token])
+  let data_limite = new Date()
+  data_limite.setTime(data_limite.getTime()+ (1000*60*60))
+
+  await query('insert into token(usuario_id,token,data_limite) values(?,?,?);',[id,session_token,data_limite])
   
   return session_token
 }

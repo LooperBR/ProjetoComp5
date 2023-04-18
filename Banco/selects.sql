@@ -29,3 +29,5 @@ FROM atividade_completacao ac
 INNER JOIN atividade a ON a.id = ac.atividade_id;
 
 SELECT * FROM atividade;
+
+SELECT NOW();

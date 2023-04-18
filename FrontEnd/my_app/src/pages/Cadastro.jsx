@@ -10,32 +10,32 @@ export default function Cadastro(){
     async function handleSubmit(e){
         e.preventDefault();
         let options = [
-        "POST",
-        "http://localhost:9001/cadastro",
-        [
-            {
-            header: "Content-Type",
-            value: "application/json",
-            },
-        ],
-        '{"login":"' +
-            e.target.login.value +
-            '","senha":"' +
-            e.target.senha.value +
-            '"}',
+            "POST",
+            "http://localhost:9001/cadastro",
+            [
+                {
+                header: "Content-Type",
+                value: "application/json",
+                },
+            ],
+            JSON.stringify({
+                nome:e.target.nome.value,
+                login:e.target.login.value,
+                senha:e.target.senha.value
+            })
         ];
         let login = await RequestHTTP(...options);
 
         
         console.log(login);
         if (login.status == 200) {
-            setCookie('username', login.login, { path: '/', maxAge: 3600 });
             setCookie('token', JSON.parse(login.responseText).token, { path: '/', maxAge: 3600 });
             console.log("redireciona");
             navigate("/home");
         }else{
             const formulario = document.getElementById("formulario")
-            console.log("login incorreto")
+            console.log("cadastro incorreto")
+            alert(JSON.parse(login.responseText).error)
         }
     }
 
@@ -45,15 +45,15 @@ export default function Cadastro(){
         <form onSubmit={handleSubmit}>
             <label htmlFor="nome">nome:</label>
             <br />
-            <input type="text" id="nome" name="nome"/>
+            <input type="text" id="nome" name="nome" required/>
             <br />
             <label htmlFor="login">login:</label>
             <br />
-            <input type="text" id="login" name="login"/>
+            <input type="text" id="login" name="login" required/>
             <br />
             <label htmlFor="senha">senha:</label>
             <br />
-            <input type="password" id="senha" name="senha"/>
+            <input type="password" id="senha" name="senha" required/>
             <br></br>
             <input type="submit" value="Cadastrar" />
         </form>

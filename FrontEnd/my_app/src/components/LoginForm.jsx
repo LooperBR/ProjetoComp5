@@ -22,7 +22,7 @@ export default function LoginForm() {
       let login = await RequestHTTP(...options);
       console.log(login)
       //console.log(login.response)
-      if (!login || login.status == 404) {
+      if (!login || login.status == 401) {
           console.log("nao tem cookie")
       }else{
           console.log("tem cookie")
