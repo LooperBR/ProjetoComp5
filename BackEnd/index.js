@@ -101,6 +101,22 @@ app.get("/atividades", jsonParser, async (req, res) => {
   
 });
 
+app.post("/nova_atividade", jsonParser, async (req, res) => {
+  let usuario_id = await validaSessao(req)
+  console.log(usuario_id)
+  console.log(req.headers['authorization'])
+  if(usuario_id){
+    let atividade = req.body
+    let atividades_usuario = await query('INSERT INTO atividade(titulo,descricao,data_limite,horario_repeticao,repete,usuario_id,tipo_atividade_id) ' 
+    +'VALUES(?,?,?,?,?,?,?);SELECT LAST_INSERT_ID();',[atividade.titulo,atividade.descricao,atividade.data_limite,atividade.horario_repeticao,atividade.repete,usuario_id,atividade.tipo_atividade_id]);
+    res.send(atividades_usuario[0]);
+  }else{
+    res.status(401).send({"error":"Bearer token invalid or not found"});
+  }
+  
+  
+});
+
 app.post("/cadastro", jsonParser, async(req, res) => {
   
   let usuario = await query('SELECT * FROM usuario WHERE login = ?;',[req.body.login])

@@ -13,14 +13,14 @@ INSERT INTO tipo_atividade(nome,geral,usuario_id) VALUES('Escola',1,NULL);
 INSERT INTO tipo_atividade(nome,geral,usuario_id) VALUES('Trabalho',1,NULL);
 INSERT INTO tipo_atividade(nome,geral,usuario_id) VALUES('ESports',0,1);
 
-INSERT INTO atividade(titulo,descricao,data_criacao,data_limite,data_primeira_completacao,horario_repeticao,repete,usuario_id,tipo_atividade_id) 
-VALUES('Checar Banco','Checar se não ssurgiu nenhum dado sujo','2023-03-20','2023-03-21',NULL,'7:30',1,1,2);
+INSERT INTO atividade(titulo,descricao,data_limite,data_primeira_completacao,horario_repeticao,repete,usuario_id,tipo_atividade_id) 
+VALUES('Checar Banco','Checar se não ssurgiu nenhum dado sujo','2023-03-21',NULL,'7:30',1,1,2);
 
-INSERT INTO atividade(titulo,descricao,data_criacao,data_limite,data_primeira_completacao,horario_repeticao,repete,usuario_id,tipo_atividade_id) 
-VALUES('Dever Paulo','Enviar dever de engenharia de software','2023-03-20','2023-03-20',NULL,'23:59',0,1,1);
+INSERT INTO atividade(titulo,descricao,data_limite,data_primeira_completacao,horario_repeticao,repete,usuario_id,tipo_atividade_id) 
+VALUES('Dever Paulo','Enviar dever de engenharia de software','2023-03-20',NULL,'23:59',0,1,1);
 
-INSERT INTO atividade(titulo,descricao,data_criacao,data_limite,data_primeira_completacao,horario_repeticao,repete,usuario_id,tipo_atividade_id) 
-VALUES('CBLOL','Assistir torneio do CBLOL','2023-03-20','2023-03-21',NULL,'13:00',1,1,3);
+INSERT INTO atividade(titulo,descricao,data_limite,data_primeira_completacao,horario_repeticao,repete,usuario_id,tipo_atividade_id) 
+VALUES('CBLOL','Assistir torneio do CBLOL','2023-03-21',NULL,'13:00',1,1,3);
 
 INSERT INTO atividade_repete(atividade_id,dia_semana) VALUES(1,2);
 INSERT INTO atividade_repete(atividade_id,dia_semana) VALUES(1,3);
