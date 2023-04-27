@@ -107,9 +107,9 @@ app.post("/nova_atividade", jsonParser, async (req, res) => {
   console.log(req.headers['authorization'])
   if(usuario_id){
     let atividade = req.body
-    let atividades_usuario = await query('INSERT INTO atividade(titulo,descricao,data_limite,horario_repeticao,repete,usuario_id,tipo_atividade_id) ' 
-    +'VALUES(?,?,?,?,?,?,?);SELECT LAST_INSERT_ID();',[atividade.titulo,atividade.descricao,atividade.data_limite,atividade.horario_repeticao,atividade.repete,usuario_id,atividade.tipo_atividade_id]);
-    res.send(atividades_usuario[0]);
+    let atividades_usuario = await query('CALL insere_atividade(?,?,?,?,?,?,?,?,?,?,?,?,?,?)',
+    [usuario_id,atividade.titulo,atividade.descricao,atividade.data_limite,atividade.horario_repeticao,atividade.repete,atividade.tipo_atividade_id,atividade.segunda,atividade.terca,atividade.quarta,atividade.quinta,atividade.sexta,atividade.sabado,atividade.domingo]);
+    res.send({id:atividades_usuario[0][0][0].id});
   }else{
     res.status(401).send({"error":"Bearer token invalid or not found"});
   }
