@@ -32,6 +32,8 @@ SELECT * FROM atividade;
 
 SELECT NOW();
 
+SELECT * FROM tipo_atividade a WHERE geral = 1 OR usuario_id = 1;
+
 INSERT INTO atividade(titulo,descricao,data_limite,horario_repeticao,repete,usuario_id,tipo_atividade_id) 
 VALUES('Checar Banco','Checar se não ssurgiu nenhum dado sujo','2023-03-21','7:30',1,1,2);
 

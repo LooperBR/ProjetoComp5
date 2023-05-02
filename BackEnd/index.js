@@ -84,6 +84,22 @@ app.get("/checa_sessao", jsonParser, async (req, res) => {
   
 });
 
+app.get("/tiposAtividade", jsonParser, async (req, res) => {
+  let usuario_id = await validaSessao(req)
+  console.log(usuario_id)
+  console.log(req.headers['authorization'])
+  if(usuario_id){
+    let tipos_atividade = await query('SELECT * FROM tipo_atividade a WHERE geral = 1 OR usuario_id = ?',[usuario_id])
+    // let atividades_usuario = atividades.filter((atividade)=>{
+    //   return atividade.usuario == usuario.login
+    // })
+    res.send(tipos_atividade[0]);
+  }else{
+    res.status(401).send({"error":"Bearer token invalid or not found"});
+  }
+  
+});
+
 app.get("/atividades", jsonParser, async (req, res) => {
   let usuario_id = await validaSessao(req)
   console.log(usuario_id)
@@ -98,7 +114,6 @@ app.get("/atividades", jsonParser, async (req, res) => {
     res.status(401).send({"error":"Bearer token invalid or not found"});
   }
   
-  
 });
 
 app.post("/nova_atividade", jsonParser, async (req, res) => {
@@ -107,6 +122,7 @@ app.post("/nova_atividade", jsonParser, async (req, res) => {
   console.log(req.headers['authorization'])
   if(usuario_id){
     let atividade = req.body
+    console.log(atividade)
     let atividades_usuario = await query('CALL insere_atividade(?,?,?,?,?,?,?,?,?,?,?,?,?,?)',
     [usuario_id,atividade.titulo,atividade.descricao,atividade.data_limite,atividade.horario_repeticao,atividade.repete,atividade.tipo_atividade_id,atividade.segunda,atividade.terca,atividade.quarta,atividade.quinta,atividade.sexta,atividade.sabado,atividade.domingo]);
     res.send({id:atividades_usuario[0][0][0].id});

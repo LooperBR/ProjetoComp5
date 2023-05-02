@@ -1,12 +1,45 @@
 import RequestHTTP from "../libraries/RequestHTTP";
 import { useNavigate } from "react-router-dom";
 import { useCookies } from "react-cookie";
+import { useEffect, useState } from "react";
 export default function NovaAtividade() {
     const [cookies, setCookie] = useCookies(["user"]);
     const navigate = useNavigate();
+    const [tiposAtividades,setTiposAtividades] = useState([])
+
+    useEffect(()=>{
+        async function PegaDados(){
+            let options = [
+                "GET",
+                "http://localhost:9001/tiposAtividade",
+                [
+                    {
+                        header: "authorization",
+                        value: "Bearer "+cookies.token,
+                    }
+                ]
+              ];
+              let tiposAtividadesHTTP = await RequestHTTP(...options)
+              setTiposAtividades(JSON.parse(tiposAtividadesHTTP.responseText));
+              console.log(tiposAtividades)
+              
+        }
+        PegaDados()
+        
+    },[])
 
     async function handleSubmit(e){
         e.preventDefault()
+        function addZero(i) {
+            if (i < 10) {i = "0" + i}
+            return i;
+          }
+          
+          const d = new Date(e.target.data_limite.value);
+          let h = addZero(d.getHours());
+          let m = addZero(d.getMinutes());
+          let s = addZero(d.getSeconds());
+          let time = h + ":" + m + ":" + s;
         let options = [
             "POST",
             "http://localhost:9001/nova_atividade",
@@ -24,9 +57,16 @@ export default function NovaAtividade() {
                 titulo:e.target.titulo.value,
                 descricao:e.target.descricao.value,
                 data_limite:e.target.data_limite.value,
-                horario_repeticao:e.target.horario_repeticao.value,
-                repete:e.target.repete.value,
-                tipo_atividade_id:e.target.tipo_atividade_id.value
+                horario_repeticao:time,
+                repete:e.target.repete.checked ? 1 : 0,
+                tipo_atividade_id:e.target.tipo.value,
+                segunda:e.target.segunda.checked ? 1 : 0,
+                terca:e.target.terca.checked ? 1 : 0,
+                quarta:e.target.quarta.checked ? 1 : 0,
+                quinta:e.target.quinta.checked ? 1 : 0,
+                sexta:e.target.sexta.checked ? 1 : 0,
+                sabado:e.target.sabado.checked ? 1 : 0,
+                domingo:e.target.domingo.checked ? 1 : 0
             })
         ];
         let atividade_inserida = await RequestHTTP(...options);
@@ -56,8 +96,13 @@ export default function NovaAtividade() {
                 <br />
                 <label htmlFor="tipo">tipo</label>
                 <select name="tipo" id="tipo">
-                    <option value="1">Escola</option>
-                    <option value="2">Trabalho</option>    
+                {tiposAtividades!=undefined && tiposAtividades.length>0?
+                    tiposAtividades.map((tipo)=>{
+                        return (<option key={tipo.id} value={tipo.id}>{tipo.nome}</option>)
+                    }):
+                    "<option value='1'>Escola</option>"+
+                    "<option value='2'>Trabalho</option>"
+                }
                 </select>
                 <br />
                 <label htmlFor="repete">Tarefa Diaria</label>
