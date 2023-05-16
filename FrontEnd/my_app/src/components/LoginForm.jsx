@@ -24,10 +24,12 @@ export default function LoginForm() {
       //console.log(login.response)
       if (!login || login.status == 401) {
           console.log("nao tem cookie")
-      }else{
+      }else if(login.status == 200){
           console.log("tem cookie")
           console.log(cookies)
           navigate("/home");
+      }else{
+        console.log("nao tem cookie")
       }
     }
     if(cookies.username){

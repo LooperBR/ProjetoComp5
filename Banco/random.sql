@@ -38,10 +38,10 @@ INSERT INTO atividade(titulo,descricao,data_limite,horario_repeticao,repete,usua
 VALUES('Checar Banco','Checar se não ssurgiu nenhum dado sujo','2023-03-21','7:30',1,1,2);
 
 CALL insere_atividade(1,
-'teste proc',
-'fazendo gambiarra com a proc',
-'2023-04-27',
-'12:00:00',
+'teste proc2',
+'fazendo gambiarra com a proc2',
+'2023-05-16',
+'14:55:55',
 1,
 1,
 1,
@@ -51,3 +51,5 @@ CALL insere_atividade(1,
 1,
 0,
 0)
+
+SELECT DAYOFWEEK('2023-05-15')

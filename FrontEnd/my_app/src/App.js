@@ -5,6 +5,7 @@ import NoPage from './pages/NoPage'
 import Login from './pages/Login'
 import Perfil from './pages/Perfil';
 import Atividades from './pages/Atividades';
+import TipoAtividade from './pages/TipoAtividade';
 import NovaAtividade from './pages/NovaAtividade';
 import Cadastro from './pages/Cadastro';
 
@@ -19,6 +20,7 @@ function App() {
           <Route path="perfil" element={<Perfil />} />
           <Route path="atividades" element={<Atividades />} />
           <Route path="nova_atividade" element={<NovaAtividade />} />
+          <Route path="tipo_atividade" element={<TipoAtividade />} />
           <Route path="*" element={<NoPage />} />
         </Route>
       </Routes>

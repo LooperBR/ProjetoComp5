@@ -20,6 +20,9 @@ function NavBar() {
                 <li>
                     <Link to="perfil">Perfil</Link>
                 </li>
+                <li>
+                    <Link to="tipo_atividade">Tipo Atividade</Link>
+                </li>
                 {/*<li>
                     <Link to="fdshgjsdkjhdsj">Erro</Link>
                 </li>*/}

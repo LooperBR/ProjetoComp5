@@ -100,6 +100,59 @@ app.get("/tiposAtividade", jsonParser, async (req, res) => {
   
 });
 
+app.post("/novo_tipo_atividade", jsonParser, async (req, res) => {
+  let usuario_id = await validaSessao(req)
+  console.log(usuario_id)
+  console.log(req.headers['authorization'])
+  if(usuario_id){
+    let tipo_atividade = req.body
+    console.log(tipo_atividade)
+    await query('INSERT INTO tipo_atividade(nome,geral,usuario_id) VALUES(?,0,?);',
+    [tipo_atividade.nome,usuario_id]);
+    res.send({response:"success"});
+  }else{
+    res.status(401).send({"error":"Bearer token invalid or not found"});
+  }
+  
+  
+});
+
+app.post("/altera_tipo_atividade", jsonParser, async (req, res) => {
+  let usuario_id = await validaSessao(req)
+  console.log(usuario_id)
+  console.log(req.headers['authorization'])
+  if(usuario_id){
+    let tipo_atividade = req.body
+    console.log(tipo_atividade)
+    await query('UPDATE tipo_atividade set nome = ? where id = ? and usuario_id = ? and geral = 0;',
+    [tipo_atividade.nome,tipo_atividade.id,usuario_id]);
+    res.send({response:"success"});
+  }else{
+    res.status(401).send({"error":"Bearer token invalid or not found"});
+  }
+  
+  
+});
+
+app.post("/deleta_tipo_atividade", jsonParser, async (req, res) => {
+  let usuario_id = await validaSessao(req)
+  console.log(usuario_id)
+  console.log(req.headers['authorization'])
+  if(usuario_id){
+    let tipo_atividade = req.body
+    console.log(tipo_atividade)
+    await query('UPDATE atividade SET tipo_atividade_id = 1 WHERE tipo_atividade_id = ? AND usuario_id = ?;',
+    [tipo_atividade.id,usuario_id]);
+    await query('Delete from tipo_atividade where id = ? and usuario_id = ? and geral = 0;',
+    [tipo_atividade.id,usuario_id]);
+    res.send({response:"success"});
+  }else{
+    res.status(401).send({"error":"Bearer token invalid or not found"});
+  }
+  
+  
+});
+
 app.get("/atividades", jsonParser, async (req, res) => {
   let usuario_id = await validaSessao(req)
   console.log(usuario_id)
