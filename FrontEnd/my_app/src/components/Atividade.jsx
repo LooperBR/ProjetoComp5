@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react"
+import { Link } from "react-router-dom";
 
 export default function Atividade({id,titulo,descricao,data_limite}){
     const [tempo,setTempo] = useState({
@@ -35,7 +36,7 @@ export default function Atividade({id,titulo,descricao,data_limite}){
     },[])
     return (
         <div style={{backgroundColor: "yellow"}}>
-            <h2>{titulo}</h2>
+            <Link to={"/editar_atividade/"+id}><h2>{titulo}</h2></Link>
             <p>{descricao}</p>
             <p>tempo restante {tempo.dia}:{tempo.hora}:{tempo.minuto}:{tempo.segundo}</p>
             <p>até {data_limite.toString()}</p>

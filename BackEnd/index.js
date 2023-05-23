@@ -153,6 +153,22 @@ app.post("/deleta_tipo_atividade", jsonParser, async (req, res) => {
   
 });
 
+app.get("/atividade/:ativId", jsonParser, async (req, res) => {
+  let usuario_id = await validaSessao(req)
+  console.log(usuario_id)
+  console.log(req.headers['authorization'])
+  if(usuario_id){
+    let atividades_usuario = await query('SELECT a.* FROM atividade a  WHERE a.usuario_id = ? and a.id = ?',[usuario_id,req.params.ativId])
+    // let atividades_usuario = atividades.filter((atividade)=>{
+    //   return atividade.usuario == usuario.login
+    // })
+    res.send(atividades_usuario[0][0]);
+  }else{
+    res.status(401).send({"error":"Bearer token invalid or not found"});
+  }
+  
+});
+
 app.get("/atividades", jsonParser, async (req, res) => {
   let usuario_id = await validaSessao(req)
   console.log(usuario_id)
@@ -178,6 +194,23 @@ app.post("/nova_atividade", jsonParser, async (req, res) => {
     console.log(atividade)
     let atividades_usuario = await query('CALL insere_atividade(?,?,?,?,?,?,?,?,?,?,?,?,?,?)',
     [usuario_id,atividade.titulo,atividade.descricao,atividade.data_limite,atividade.horario_repeticao,atividade.repete,atividade.tipo_atividade_id,atividade.segunda,atividade.terca,atividade.quarta,atividade.quinta,atividade.sexta,atividade.sabado,atividade.domingo]);
+    res.send({id:atividades_usuario[0][0][0].id});
+  }else{
+    res.status(401).send({"error":"Bearer token invalid or not found"});
+  }
+  
+  
+});
+
+app.post("/edita_atividade", jsonParser, async (req, res) => {
+  let usuario_id = await validaSessao(req)
+  console.log(usuario_id)
+  console.log(req.headers['authorization'])
+  if(usuario_id){
+    let atividade = req.body
+    console.log(atividade)
+    let atividades_usuario = await query('CALL edita_atividade(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)',
+    [atividade.id,usuario_id,atividade.titulo,atividade.descricao,atividade.data_limite,atividade.horario_repeticao,atividade.repete,atividade.tipo_atividade_id,atividade.segunda,atividade.terca,atividade.quarta,atividade.quinta,atividade.sexta,atividade.sabado,atividade.domingo]);
     res.send({id:atividades_usuario[0][0][0].id});
   }else{
     res.status(401).send({"error":"Bearer token invalid or not found"});

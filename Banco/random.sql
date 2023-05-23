@@ -30,9 +30,11 @@ INNER JOIN atividade a ON a.id = ac.atividade_id;
 
 SELECT * FROM atividade;
 
+UPDATE atividade SET tipo_atividade_id = 1 WHERE tipo_atividade_id = 3 AND usuario_id = 1;
+
 SELECT NOW();
 
-SELECT * FROM tipo_atividade a WHERE geral = 1 OR usuario_id = 1;
+SELECT * FROM tipo_atividade a WHERE geral = 1 OR usuario_id =1;
 
 INSERT INTO atividade(titulo,descricao,data_limite,horario_repeticao,repete,usuario_id,tipo_atividade_id) 
 VALUES('Checar Banco','Checar se não ssurgiu nenhum dado sujo','2023-03-21','7:30',1,1,2);
@@ -52,4 +54,28 @@ CALL insere_atividade(1,
 0,
 0)
 
+CALL edita_atividade(16,
+1,
+'teste edita',
+'fazendo gambiarra com a proc de editar',
+'2023-05-25',
+'16:00:00',
+1,
+2,
+0,
+1,
+0,
+1,
+0,
+0,
+1)
+
+SELECT * FROM atividade_repete WHERE atividade_id = 16;
+
 SELECT DAYOFWEEK('2023-05-15')
+
+SELECT * FROM atividade_completacao ac
+INNER JOIN atividade a ON a.id = ac.atividade_id
+WHERE ac.data_completacao IS null
+
+INSERT INTO tipo_atividade(nome,geral,usuario_id) VALUES('ESports',0,1);

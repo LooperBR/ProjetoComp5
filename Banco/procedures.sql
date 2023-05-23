@@ -66,3 +66,83 @@ BEGIN
 	
 END $$
 delimiter ;
+
+DELIMITER $$
+CREATE PROCEDURE edita_atividade(IN p_atividade_id INT,
+											IN p_usuario_id INT,
+											IN p_titulo VARCHAR(45),
+											IN p_descricao VARCHAR(200),
+											IN p_data_limite DATETIME,
+											IN p_horario_repeticao TIME,
+											IN p_repete TINYINT,
+											IN p_tipo_atividade_id INT,
+											IN p_segunda TINYINT,
+											IN p_terca TINYINT,
+											IN p_quarta TINYINT,
+											IN p_quinta TINYINT,
+											IN p_sexta TINYINT,
+											IN p_sabado TINYINT,
+											IN p_domingo TINYINT)
+BEGIN
+
+	UPDATE atividade SET titulo=p_titulo,descricao=p_descricao,data_limite=p_data_limite,horario_repeticao=p_horario_repeticao,repete=p_repete,tipo_atividade_id=p_tipo_atividade_id
+		WHERE id = p_atividade_id AND usuario_id = p_usuario_id;
+	
+	if p_domingo = 1 then
+		if not EXISTS(SELECT 1 FROM atividade_repete WHERE atividade_id = p_atividade_id AND dia_semana=1) then
+			INSERT INTO atividade_repete(atividade_id,dia_semana) VALUES(p_atividade_id,1);		
+		end if;
+	else
+		DELETE FROM atividade_repete WHERE atividade_id = p_atividade_id AND dia_semana=1;
+	END if;
+	
+	if p_segunda = 1 then
+		if not EXISTS(SELECT 1 FROM atividade_repete WHERE atividade_id = p_atividade_id AND dia_semana=2) then
+			INSERT INTO atividade_repete(atividade_id,dia_semana) VALUES(p_atividade_id,2);		
+		end if;
+	else
+		DELETE FROM atividade_repete WHERE atividade_id = p_atividade_id AND dia_semana=2;
+	END if;
+	
+	if p_terca = 1 then
+		if not EXISTS(SELECT 1 FROM atividade_repete WHERE atividade_id = p_atividade_id AND dia_semana=3) then
+			INSERT INTO atividade_repete(atividade_id,dia_semana) VALUES(p_atividade_id,3);		
+		end if;
+	else
+		DELETE FROM atividade_repete WHERE atividade_id = p_atividade_id AND dia_semana=3;
+	END if;
+	
+	if p_quarta = 1 then
+		if not EXISTS(SELECT 1 FROM atividade_repete WHERE atividade_id = p_atividade_id AND dia_semana=4) then
+			INSERT INTO atividade_repete(atividade_id,dia_semana) VALUES(p_atividade_id,4);		
+		end if;
+	else
+		DELETE FROM atividade_repete WHERE atividade_id = p_atividade_id AND dia_semana=4;
+	END if;
+	
+	if p_quinta = 1 then
+		if not EXISTS(SELECT 1 FROM atividade_repete WHERE atividade_id = p_atividade_id AND dia_semana=5) then
+			INSERT INTO atividade_repete(atividade_id,dia_semana) VALUES(p_atividade_id,5);		
+		end if;
+	else
+		DELETE FROM atividade_repete WHERE atividade_id = p_atividade_id AND dia_semana=5;
+	END if;
+	
+	if p_sexta = 1 then
+		if not EXISTS(SELECT 1 FROM atividade_repete WHERE atividade_id = p_atividade_id AND dia_semana=6) then
+			INSERT INTO atividade_repete(atividade_id,dia_semana) VALUES(p_atividade_id,6);		
+		end if;
+	else
+		DELETE FROM atividade_repete WHERE atividade_id = p_atividade_id AND dia_semana=6;
+	END if;
+	
+	if p_sabado = 1 then
+		if not EXISTS(SELECT 1 FROM atividade_repete WHERE atividade_id = p_atividade_id AND dia_semana=7) then
+			INSERT INTO atividade_repete(atividade_id,dia_semana) VALUES(p_atividade_id,7);		
+		end if;
+	else
+		DELETE FROM atividade_repete WHERE atividade_id = p_atividade_id AND dia_semana=7;
+	END if;
+	
+END $$
+DELIMITER ;
