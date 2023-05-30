@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 import RequestHTTP from "../libraries/RequestHTTP";
 
 export default function Layout() {
-  console.log("fudeu")
+  //console.log("fudeu")
   const navigate = useNavigate();
   const [cookies, setCookie] = useCookies(["user"]);
   useEffect(()=>{
@@ -23,14 +23,14 @@ export default function Layout() {
         ]
       ];
       let login = await RequestHTTP(...options);
-      console.log(login)
+      //console.log(login)
       //console.log(login.response)
       if (!login || login.status != 200) {
-          console.log("nao tem cookie")
+          //console.log("nao tem cookie")
           navigate("/");
       }else{
-          console.log("tem cookie")
-          console.log(cookies)
+          //console.log("tem cookie")
+          //console.log(cookies)
       }
     }
     checalogin()

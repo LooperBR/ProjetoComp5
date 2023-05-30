@@ -72,7 +72,7 @@ CALL edita_atividade(16,
 
 SELECT * FROM atividade_repete WHERE atividade_id = 16;
 
-SELECT DAYOFWEEK('2023-05-15')
+SELECT DAYOFWEEK(NOW())
 
 SELECT * FROM atividade_completacao ac
 INNER JOIN atividade a ON a.id = ac.atividade_id

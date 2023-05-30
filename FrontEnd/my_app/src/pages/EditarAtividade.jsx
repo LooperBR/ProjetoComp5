@@ -36,7 +36,15 @@ export default function EditarAtividade(){
               let atividadesHTTP = await RequestHTTP(...options)
               console.log("atividades")
               console.log(atividadesHTTP.responseText)
-              setAtividade(JSON.parse(atividadesHTTP.responseText));
+              let ativ = await JSON.parse(atividadesHTTP.responseText)
+              ativ.data_limite = new Date(ativ.data_limite)
+              const offset = ativ.data_limite.getTimezoneOffset()
+              ativ.data_limite = new Date(ativ.data_limite.getTime() - (offset*60*1000))
+              ativ.data_limite = ativ.data_limite.toISOString()
+              ativ.data_limite = ativ.data_limite.substring(0,ativ.data_limite.length-1)
+              console.log(ativ.data_limite)
+              setAtividade(ativ);
+              console.log(ativ)
               options = [
                 "GET",
                 "http://localhost:9001/tiposAtividade",
@@ -49,7 +57,7 @@ export default function EditarAtividade(){
               ];
               let tiposAtividadesHTTP = await RequestHTTP(...options)
               setTiposAtividades(JSON.parse(tiposAtividadesHTTP.responseText));
-              console.log(tiposAtividades)
+              //console.log(tiposAtividades)
               
         }
         PegaDados()
@@ -101,16 +109,15 @@ export default function EditarAtividade(){
         let atividade_inserida = await RequestHTTP(...options);
 
         
-        console.log(atividade_inserida);
+        //console.log(atividade_inserida);
         if (atividade_inserida.status == 200) {
-            console.log("criou");
+          //  console.log("criou");
             window.location.reload(false)
         }else{
-            console.log("cadastro incorreto")
+            //console.log("cadastro incorreto")
             alert(JSON.parse(atividade_inserida.responseText).error)
         }
     }
-
     return(
         <div>
             <form onSubmit={handleSubmit}>

@@ -29,8 +29,6 @@ if p_id_atividade = 0 then-- execucao diaria
 	   DELETE FROM TempAtividades WHERE v_id=id;
 	END WHILE;
 ELSE -- execucao de atividade especifica
-
-
 	INSERT INTO atividade_completacao(data_inicio,data_fim,atividade_id) VALUES(NOW(),ADDTIME(NOW(),v_horario_repeticao),v_id);
 END if;
 
