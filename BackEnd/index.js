@@ -158,7 +158,14 @@ app.get("/atividade/:ativId", jsonParser, async (req, res) => {
   console.log(usuario_id)
   console.log(req.headers['authorization'])
   if(usuario_id){
-    let atividades_usuario = await query('SELECT a.* FROM atividade a  WHERE a.usuario_id = ? and a.id = ?',[usuario_id,req.params.ativId])
+    let atividades_usuario = await query('SELECT a.*, ' +
+    ' case when EXISTS(SELECT 1 FROM atividade_repete rep WHERE rep.atividade_id = a.id AND rep.dia_semana=1) then 1 ELSE 0 END domingo,' +
+    ' case when EXISTS(SELECT 1 FROM atividade_repete rep WHERE rep.atividade_id = a.id AND rep.dia_semana=2) then 1 ELSE 0 END segunda,' +
+    ' case when EXISTS(SELECT 1 FROM atividade_repete rep WHERE rep.atividade_id = a.id AND rep.dia_semana=3) then 1 ELSE 0 END terca,' +
+    ' case when EXISTS(SELECT 1 FROM atividade_repete rep WHERE rep.atividade_id = a.id AND rep.dia_semana=4) then 1 ELSE 0 END quarta,' +
+    ' case when EXISTS(SELECT 1 FROM atividade_repete rep WHERE rep.atividade_id = a.id AND rep.dia_semana=5) then 1 ELSE 0 END quinta,' +
+    ' case when EXISTS(SELECT 1 FROM atividade_repete rep WHERE rep.atividade_id = a.id AND rep.dia_semana=6) then 1 ELSE 0 END sexta,' +
+    ' case when EXISTS(SELECT 1 FROM atividade_repete rep WHERE rep.atividade_id = a.id AND rep.dia_semana=7) then 1 ELSE 0 END sabado FROM atividade a  WHERE a.usuario_id = ? and a.id = ?',[usuario_id,req.params.ativId])
     // let atividades_usuario = atividades.filter((atividade)=>{
     //   return atividade.usuario == usuario.login
     // })
@@ -179,6 +186,21 @@ app.get("/atividades", jsonParser, async (req, res) => {
     //   return atividade.usuario == usuario.login
     // })
     res.send(atividades_usuario[0]);
+  }else{
+    res.status(401).send({"error":"Bearer token invalid or not found"});
+  }
+  
+});
+app.get("/usuario", jsonParser, async (req, res) => {
+  let usuario_id = await validaSessao(req)
+  console.log(usuario_id)
+  console.log(req.headers['authorization'])
+  if(usuario_id){
+    let usuario = await query('SELECT a.* FROM usuario a  WHERE a.id = ?',[usuario_id])
+    // let atividades_usuario = atividades.filter((atividade)=>{
+    //   return atividade.usuario == usuario.login
+    // })
+    res.send(usuario[0][0]);
   }else{
     res.status(401).send({"error":"Bearer token invalid or not found"});
   }
@@ -211,7 +233,7 @@ app.post("/edita_atividade", jsonParser, async (req, res) => {
     console.log(atividade)
     let atividades_usuario = await query('CALL edita_atividade(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)',
     [atividade.id,usuario_id,atividade.titulo,atividade.descricao,atividade.data_limite,atividade.horario_repeticao,atividade.repete,atividade.tipo_atividade_id,atividade.segunda,atividade.terca,atividade.quarta,atividade.quinta,atividade.sexta,atividade.sabado,atividade.domingo]);
-    res.send({id:atividades_usuario[0][0][0].id});
+    res.send({"result": "success"});
   }else{
     res.status(401).send({"error":"Bearer token invalid or not found"});
   }
@@ -233,6 +255,34 @@ app.post("/cadastro", jsonParser, async(req, res) => {
   
 });
 
+app.post("/altera_senha", jsonParser, async (req, res) => {
+  let usuario_id = await validaSessao(req)
+  console.log(usuario_id)
+  console.log(req.headers['authorization'])
+  if(usuario_id){
+    let atividade = req.body
+    console.log(atividade)
+    let teste_senha = await query('select * from usuario where id = ? and senha = ?;',
+    [usuario_id,req.body.senha_antiga]);
+    console.log(teste_senha)
+    if(teste_senha[0].length>0){
+      let atividades_usuario = await query('UPDATE usuario SET senha = ? WHERE id = ?;',
+      [req.body.senha_nova,usuario_id]);
+      res.send({"result": "success"});
+      return
+    }else{
+      res.status(400).send({"error": "Senha incorreta"});
+      return
+    }
+
+    
+    res.send({"result": "success"});
+  }else{
+    res.status(401).send({"error":"Bearer token invalid or not found"});
+  }
+  
+  
+});
 
 app.post("/login", jsonParser, async(req, res) => {
   console.log("login");

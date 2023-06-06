@@ -14,7 +14,7 @@ delimiter ;
 DELIMITER $$
 CREATE PROCEDURE insere_atividade(IN p_usuario_id INT,
 											IN p_titulo VARCHAR(45),
-											IN p_descricao VARCHAR(200),
+											IN p_descricao TEXT,
 											IN p_data_limite DATETIME,
 											IN p_horario_repeticao TIME,
 											IN p_repete TINYINT,
@@ -71,7 +71,7 @@ DELIMITER $$
 CREATE PROCEDURE edita_atividade(IN p_atividade_id INT,
 											IN p_usuario_id INT,
 											IN p_titulo VARCHAR(45),
-											IN p_descricao VARCHAR(200),
+											IN p_descricao TEXT,
 											IN p_data_limite DATETIME,
 											IN p_horario_repeticao TIME,
 											IN p_repete TINYINT,

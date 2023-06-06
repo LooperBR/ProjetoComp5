@@ -78,4 +78,16 @@ SELECT * FROM atividade_completacao ac
 INNER JOIN atividade a ON a.id = ac.atividade_id
 WHERE ac.data_completacao IS null
 
+SELECT a.*,
+case when EXISTS(SELECT 1 FROM atividade_repete rep WHERE rep.atividade_id = a.id AND rep.dia_semana=1) then 1 ELSE 0 END Domingo,
+case when EXISTS(SELECT 1 FROM atividade_repete rep WHERE rep.atividade_id = a.id AND rep.dia_semana=2) then 1 ELSE 0 END Segunda,
+case when EXISTS(SELECT 1 FROM atividade_repete rep WHERE rep.atividade_id = a.id AND rep.dia_semana=3) then 1 ELSE 0 END Terca,
+case when EXISTS(SELECT 1 FROM atividade_repete rep WHERE rep.atividade_id = a.id AND rep.dia_semana=4) then 1 ELSE 0 END Quarta,
+case when EXISTS(SELECT 1 FROM atividade_repete rep WHERE rep.atividade_id = a.id AND rep.dia_semana=5) then 1 ELSE 0 END Quinta,
+case when EXISTS(SELECT 1 FROM atividade_repete rep WHERE rep.atividade_id = a.id AND rep.dia_semana=6) then 1 ELSE 0 END Sexta,
+case when EXISTS(SELECT 1 FROM atividade_repete rep WHERE rep.atividade_id = a.id AND rep.dia_semana=7) then 1 ELSE 0 END Sabado
+FROM atividade a  WHERE a.usuario_id = ? and a.id = ?
+
+UPDATE usuario SET senha = novasenha WHERE id = ?
+
 INSERT INTO tipo_atividade(nome,geral,usuario_id) VALUES('ESports',0,1);

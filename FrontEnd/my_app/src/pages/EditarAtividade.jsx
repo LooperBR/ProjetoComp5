@@ -6,17 +6,25 @@ import { useParams,useNavigate } from "react-router-dom";
 export default function EditarAtividade(){
     const { id } = useParams();
     const [cookies, setCookie] = useCookies(["user"]);
+    const [random,setRandom] = useState(false)
     const [atividade,setAtividade] = useState({
         "id":"",
-"titulo":"",
-"descricao":"",
-"data_criacao":"",
-"data_limite":"",
-"data_primeira_completacao":"",
-"horario_repeticao":"",
-"repete":"",
-"usuario_id":"",
-"tipo_atividade_id":"",
+        "titulo":"",
+        "descricao":"",
+        "data_criacao":"",
+        "data_limite":"",
+        "data_primeira_completacao":"",
+        "horario_repeticao":"",
+        "repete":"",
+        "usuario_id":"",
+        "tipo_atividade_id":"",
+        "domingo":0,
+        "segunda":0,
+        "terca":0,
+        "quarta":0,
+        "quinta":0,
+        "sexta":0,
+        "sabado":0,
     })
     const [tiposAtividades,setTiposAtividades] = useState([])
     const navigate = useNavigate();
@@ -111,13 +119,28 @@ export default function EditarAtividade(){
         
         //console.log(atividade_inserida);
         if (atividade_inserida.status == 200) {
-          //  console.log("criou");
-            window.location.reload(false)
+            console.log(atividade_inserida);
+            //window.location.reload(false)
         }else{
             //console.log("cadastro incorreto")
             alert(JSON.parse(atividade_inserida.responseText).error)
         }
     }
+
+    function handleCheck(e){
+        let atividadeCopia = atividade
+        atividadeCopia[e.target.id] = !atividadeCopia[e.target.id]
+        setAtividade(atividadeCopia)
+        setRandom(!random)
+    }
+
+    function handleSelect(e){
+        let atividadeCopia = atividade
+        atividadeCopia.tipo_atividade_id = e.target.value
+        setAtividade(atividadeCopia)
+        setRandom(!random)
+    }
+
     return(
         <div>
             <form onSubmit={handleSubmit}>
@@ -131,7 +154,7 @@ export default function EditarAtividade(){
                 <input type="datetime-local" name="data_limite" id="data_limite" defaultValue={atividade.data_limite}/>
                 <br />
                 <label htmlFor="tipo">tipo</label>
-                <select name="tipo" id="tipo" defaultValue={atividade.tipo_atividade_id}>
+                <select name="tipo" id="tipo" value={atividade.tipo_atividade_id} onChange={handleSelect}>
                 {tiposAtividades!=undefined && tiposAtividades.length>0?
                     tiposAtividades.map((tipo)=>{
                         return (<option key={tipo.id} value={tipo.id} >{tipo.nome}</option>)
@@ -142,23 +165,23 @@ export default function EditarAtividade(){
                 </select>
                 <br />
                 <label htmlFor="repete">Tarefa Diaria</label>
-                <input type="checkbox" name="repete" id="repete" defaultValue={atividade.repete}/>
+                <input type="checkbox" name="repete" id="repete" checked={atividade.repete == 1 ? true : false} onChange={handleCheck}/>
                 <br />
                 <div id="dias_repetir">
                     <label htmlFor="domingo">domingo</label>
-                    <input type="checkbox" name="domingo" id="domingo" />
+                    <input type="checkbox" name="domingo" id="domingo" checked={atividade.domingo == 1 ? true : false} onChange={handleCheck} />
                     <label htmlFor="segunda">segunda</label>
-                    <input type="checkbox" name="segunda" id="segunda" />
+                    <input type="checkbox" name="segunda" id="segunda" checked={atividade.segunda == 1 ? true : false} onChange={handleCheck} />
                     <label htmlFor="terca">terca</label>
-                    <input type="checkbox" name="terca" id="terca" />
+                    <input type="checkbox" name="terca" id="terca" checked={atividade.terca == 1 ? true : false} onChange={handleCheck} />
                     <label htmlFor="quarta">quarta</label>
-                    <input type="checkbox" name="quarta" id="quarta" />
+                    <input type="checkbox" name="quarta" id="quarta" checked={atividade.quarta == 1 ? true : false} onChange={handleCheck} />
                     <label htmlFor="quinta">quinta</label>
-                    <input type="checkbox" name="quinta" id="quinta" />
+                    <input type="checkbox" name="quinta" id="quinta" checked={atividade.quinta == 1 ? true : false} onChange={handleCheck} />
                     <label htmlFor="sexta">sexta</label>
-                    <input type="checkbox" name="sexta" id="sexta" />
+                    <input type="checkbox" name="sexta" id="sexta" checked={atividade.sexta == 1 ? true : false} onChange={handleCheck} />
                     <label htmlFor="sabado">sabado</label>
-                    <input type="checkbox" name="sabado" id="sabado" />
+                    <input type="checkbox" name="sabado" id="sabado" checked={atividade.sabado == 1 ? true : false} onChange={handleCheck} />
                     <br />
                 </div>
                 <button>Editar atividade</button>

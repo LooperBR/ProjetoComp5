@@ -5,7 +5,7 @@ SELECT * FROM atividade;
 SELECT * FROM atividade_completacao;
 SELECT * FROM atividade_repete;
 
-INSERT INTO avatar(nome,imagem,nivel) VALUES('basico','basico.jpg',1);
+INSERT INTO avatar(nome,imagem,nivel) VALUES('basico','basico.png',1);
 
 INSERT INTO usuario(nome,login,senha,nivel,xp,avatar_id) VALUES('Joao','Joao','senha',1,0,1);
 
