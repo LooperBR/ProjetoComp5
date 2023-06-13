@@ -191,6 +191,28 @@ app.get("/atividades", jsonParser, async (req, res) => {
   }
   
 });
+
+app.get("/atividades_completacao", jsonParser, async (req, res) => {
+  let usuario_id = await validaSessao(req)
+  console.log(usuario_id)
+  console.log(req.headers['authorization'])
+  if(usuario_id){
+    let atividades_usuario = await query('SELECT a.id,ac.id id_completa,a.titulo,a.descricao,ac.data_fim data_limite FROM atividade_completacao ac '+
+    'INNER JOIN atividade a ON a.id = ac.atividade_id ' +
+    'WHERE a.usuario_id = 1 ' +
+    'AND ac.data_completacao IS null ' +
+    'AND ac.data_desistencia IS null ' +
+    'ORDER BY ac.data_fim;',[usuario_id])
+    // let atividades_usuario = atividades.filter((atividade)=>{
+    //   return atividade.usuario == usuario.login
+    // })
+    res.send(atividades_usuario[0]);
+  }else{
+    res.status(401).send({"error":"Bearer token invalid or not found"});
+  }
+  
+});
+
 app.get("/usuario", jsonParser, async (req, res) => {
   let usuario_id = await validaSessao(req)
   console.log(usuario_id)
@@ -217,6 +239,40 @@ app.post("/nova_atividade", jsonParser, async (req, res) => {
     let atividades_usuario = await query('CALL insere_atividade(?,?,?,?,?,?,?,?,?,?,?,?,?,?)',
     [usuario_id,atividade.titulo,atividade.descricao,atividade.data_limite,atividade.horario_repeticao,atividade.repete,atividade.tipo_atividade_id,atividade.segunda,atividade.terca,atividade.quarta,atividade.quinta,atividade.sexta,atividade.sabado,atividade.domingo]);
     res.send({id:atividades_usuario[0][0][0].id});
+  }else{
+    res.status(401).send({"error":"Bearer token invalid or not found"});
+  }
+  
+  
+});
+
+app.post("/completa_atividade", jsonParser, async (req, res) => {
+  let usuario_id = await validaSessao(req)
+  console.log(usuario_id)
+  console.log(req.headers['authorization'])
+  if(usuario_id){
+    let atividade = req.body
+    console.log(atividade)
+    let atividades_usuario = await query('UPDATE atividade_completacao SET data_completacao = NOW() WHERE id = ?',
+    [atividade.id_completa]);
+    res.send({result:"success"});
+  }else{
+    res.status(401).send({"error":"Bearer token invalid or not found"});
+  }
+  
+  
+});
+
+app.post("/desiste_atividade", jsonParser, async (req, res) => {
+  let usuario_id = await validaSessao(req)
+  console.log(usuario_id)
+  console.log(req.headers['authorization'])
+  if(usuario_id){
+    let atividade = req.body
+    console.log(atividade)
+    let atividades_usuario = await query('UPDATE atividade_completacao SET data_desistencia = NOW() WHERE id = ?',
+    [atividade.id_completa]);
+    res.send({result:"success"});
   }else{
     res.status(401).send({"error":"Bearer token invalid or not found"});
   }

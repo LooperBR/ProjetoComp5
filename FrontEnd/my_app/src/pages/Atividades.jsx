@@ -12,7 +12,7 @@ export default function Atividades(){
         async function PegaDados(){
             let options = [
                 "GET",
-                "http://localhost:9001/atividades",
+                "http://localhost:9001/atividades_completacao",
                 [
                     {
                         header: "authorization",
@@ -39,7 +39,7 @@ export default function Atividades(){
 
             {atividades!=undefined && atividades.length>0?
                 atividades.map((atividade)=>{
-                    return (<Atividade key={atividade.id} id={atividade.id} titulo={atividade.titulo} descricao={atividade.descricao} data_limite={atividade.data_limite}/>)
+                    return (<Atividade key={atividade.id} id={atividade.id} id_completa = {atividade.id_completa} titulo={atividade.titulo} descricao={atividade.descricao} data_limite={atividade.data_limite}/>)
                 }):"Não existem atividades pendentes"
             }
 

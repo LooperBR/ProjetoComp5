@@ -64,6 +64,8 @@ BEGIN
 		INSERT INTO atividade_repete(atividade_id,dia_semana) VALUES(v_atividade_id,7);
 	END if;
 	
+	CALL cria_atividade_completacao(v_atividade_id);
+	
 END $$
 delimiter ;
 

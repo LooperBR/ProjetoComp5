@@ -87,10 +87,9 @@ export default function Perfil(){
                 <label htmlFor="senha_repetida">repita a senha</label>
                 <input type="password" name="senha_repetida" id="senha_repetida" />
                 
-
-                <button>cadastrar</button>
+                <br />
+                <button>Trocar Senha</button>
             </form>
-            <button>Trocar senha</button>
         </div>
     )
 }

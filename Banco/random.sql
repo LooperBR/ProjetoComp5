@@ -6,6 +6,8 @@ SELECT * FROM atividade_completacao;
 SELECT * FROM atividade_repete;
 SELECT * FROM token;
 
+UPDATE atividade_completacao SET data_completacao = NOW() WHERE id = ?
+
 -- login de usuario
 SELECT * FROM usuario WHERE login = 'joao' AND senha = 'senha';
 
@@ -29,6 +31,15 @@ FROM atividade_completacao ac
 INNER JOIN atividade a ON a.id = ac.atividade_id;
 
 SELECT * FROM atividade;
+
+SELECT a.* FROM atividade a  WHERE a.usuario_id = 1;
+
+SELECT ac.id,a.titulo,a.descricao,ac.data_fim data_limite FROM atividade_completacao ac 
+INNER JOIN atividade a ON a.id = ac.atividade_id
+WHERE a.usuario_id = 1
+AND ac.data_completacao IS NULL
+ORDER BY ac.data_fim
+;
 
 UPDATE atividade SET tipo_atividade_id = 1 WHERE tipo_atividade_id = 3 AND usuario_id = 1;
 

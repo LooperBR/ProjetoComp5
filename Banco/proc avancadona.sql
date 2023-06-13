@@ -15,7 +15,7 @@ BEGIN
 			SELECT 
 				a.id,a.horario_repeticao,
 				COALESCE(
-					(SELECT MIN(dia_semana) FROM atividade_repete ar WHERE  a.id = ar.atividade_id AND (ar.dia_semana>DAYOFWEEK(NOW()) OR (ar.dia_semana=DAYOFWEEK(NOW()) AND a.horario_repeticao<CURRENT_TIME()))),
+					(SELECT MIN(dia_semana) FROM atividade_repete ar WHERE  a.id = ar.atividade_id AND (ar.dia_semana>DAYOFWEEK(NOW()) OR (ar.dia_semana=DAYOFWEEK(NOW()) AND a.horario_repeticao>CURRENT_TIME()))),
 					(SELECT MIN(dia_semana) FROM atividade_repete ar WHERE  a.id = ar.atividade_id)
 				) dia_semana
 			FROM atividade a
@@ -59,6 +59,15 @@ END $$
 delimiter ;
 -- fim da proc
 
+CREATE EVENT cria_evento_repetido
+ON SCHEDULE EVERY 24 HOUR 
+STARTS '2023-06-13 23:55:00'
+DO
+   CALL cria_atividade_completacao(0);
+
+-- SHOW PROCESSLIST;
+-- SHOW EVENTS FROM agenda_atividades;
+-- DROP EVENT cria_evento_repetido;
 /* CALL cria_atividade_completacao(6);
 
  DROP PROCEDURE cria_atividade_completacao;
