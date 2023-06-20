@@ -53,6 +53,13 @@ async function createNewToken(id){
   return session_token
 }
 
+async function addXP(usuario_id,xp_amount){
+
+  await query('UPDATE usuario SET xp = xp+? WHERE id = ?',[xp_amount,usuario_id])
+  
+  return
+}
+
 app.use(cors(corsOptions));
 
 app.get("/teste", jsonParser, (req, res) => {
@@ -255,6 +262,7 @@ app.post("/completa_atividade", jsonParser, async (req, res) => {
     console.log(atividade)
     let atividades_usuario = await query('UPDATE atividade_completacao SET data_completacao = NOW() WHERE id = ?',
     [atividade.id_completa]);
+    addXP(usuario_id,25)
     res.send({result:"success"});
   }else{
     res.status(401).send({"error":"Bearer token invalid or not found"});

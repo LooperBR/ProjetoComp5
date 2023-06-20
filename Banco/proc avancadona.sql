@@ -11,6 +11,8 @@ BEGIN
 	CREATE TEMPORARY TABLE TempAtividades (id INT,horario_repeticao TIME,dia_semana INT,diferenca INT); 
 	
 	if p_id_atividade = 0 then
+		update usuario SET xp = 0, nivel = nivel+=1 WHERE xp>=100
+	
 		INSERT INTO TempAtividades(id,horario_repeticao,dia_semana)
 			SELECT 
 				a.id,a.horario_repeticao,
