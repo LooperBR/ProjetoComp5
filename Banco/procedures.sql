@@ -64,7 +64,7 @@ BEGIN
 		INSERT INTO atividade_repete(atividade_id,dia_semana) VALUES(v_atividade_id,7);
 	END if;
 	
-	CALL cria_atividade_completacao(v_atividade_id);
+	CALL cria_atividade_completacao(v_atividade_id,0,0);
 	
 END $$
 delimiter ;
@@ -145,6 +145,9 @@ BEGIN
 	else
 		DELETE FROM atividade_repete WHERE atividade_id = p_atividade_id AND dia_semana=7;
 	END if;
+	
+	DELETE FROM atividade_completacao WHERE atividade_id = p_atividade_id AND data_completacao IS NULL AND data_desistencia IS NULL;
+	CALL cria_atividade_completacao(0,0,p_usuario_id);
 	
 END $$
 DELIMITER ;

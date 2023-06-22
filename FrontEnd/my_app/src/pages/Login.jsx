@@ -3,10 +3,10 @@ import { Link } from "react-router-dom";
 
 function Login() {
   return (
-    <div>
+    <div className="login-container">
       <h1>Login</h1>
       <LoginForm />
-      <Link to="cadastro"><button>Cadastrar</button></Link>
+      <Link to="cadastro"><button className="register-button">Cadastrar</button></Link>
     </div>
   );
 }

@@ -130,7 +130,7 @@ export default function Perfil(){
     }
 
     return(
-        <div>
+        <div className="page-container">
             <h1>Tipo Atividades</h1>
             <button onClick={zera}>Novo Tipo Atividade</button>
             <form onSubmit={handleSubmit}>

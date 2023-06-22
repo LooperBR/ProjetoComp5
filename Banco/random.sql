@@ -104,3 +104,8 @@ UPDATE usuario SET senha = novasenha WHERE id = ?
 INSERT INTO tipo_atividade(nome,geral,usuario_id) VALUES('ESports',0,1);
 
 UPDATE usuario SET xp = xp+5 WHERE id = ?
+
+SELECT usuario_id,COUNT(1) FROM atividade_completacao ac
+INNER JOIN atividade a ON a.id = ac.atividade_id
+GROUP BY usuario_id
+;

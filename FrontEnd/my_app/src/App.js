@@ -10,6 +10,8 @@ import NovaAtividade from './pages/NovaAtividade';
 import Cadastro from './pages/Cadastro';
 import EditarAtividade from './pages/EditarAtividade';
 
+require('./App.css');
+
 function App() {
   return (
     <BrowserRouter>

@@ -39,13 +39,11 @@ export default function LoginForm() {
   },[]);
 
   const styleRightForm = {
-    color: "blue",
-    backgroundColor : "white"
+    color: "blue"
   }
   
   const styleWrongForm = {
-    color: "red",
-    backgroundColor : "yellow"
+    color: "red"
   }
 
   async function handleSubmit(e) {
@@ -77,7 +75,6 @@ export default function LoginForm() {
     }else{
       const formulario = document.getElementById("formulario")
       formulario.style.color = styleWrongForm.color
-      formulario.style.backgroundColor = styleWrongForm.backgroundColor
       console.log("login incorreto")
     }
   }
@@ -85,7 +82,6 @@ export default function LoginForm() {
   function resetFormStyle(){
     const formulario = document.getElementById("formulario")
     formulario.style.color = styleRightForm.color
-    formulario.style.backgroundColor = styleRightForm.backgroundColor
   }
 
   return (

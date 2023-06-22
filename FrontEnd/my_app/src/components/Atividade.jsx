@@ -101,13 +101,13 @@ export default function Atividade({id,id_completa,titulo,descricao,data_limite})
     }
 
     return (
-        <div style={{backgroundColor: "yellow"}}>
+        <div className="column container content">
             <Link to={"/editar_atividade/"+id}><h2>{titulo}</h2></Link>
             <p>{descricao}</p>
             <p>tempo restante {tempo.dia}:{tempo.hora}:{tempo.minuto}:{tempo.segundo}</p>
             <p>até {data_limite.toString()}</p>
-            <button onClick={completa_atividade}>Concluir atividade</button>
-            <button onClick={desiste_atividade}>Desistir da atividade</button>
+            <button className="button" onClick={completa_atividade}>Concluir atividade</button>
+            <button className="button primary" onClick={desiste_atividade}>Desistir da atividade</button>
         </div>
     )
 }

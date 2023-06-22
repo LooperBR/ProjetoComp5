@@ -132,6 +132,16 @@ export default function EditarAtividade(){
         atividadeCopia[e.target.id] = !atividadeCopia[e.target.id]
         setAtividade(atividadeCopia)
         setRandom(!random)
+        hideDias()
+    }
+
+    function hideDias(){
+        let comp_dias = document.getElementById('dias_repetir');
+        if(atividade.repete == 1){
+            comp_dias.style.display = 'flex'
+        }else{
+            comp_dias.style.display = 'none'
+        }
     }
 
     function handleSelect(e){
@@ -142,7 +152,7 @@ export default function EditarAtividade(){
     }
 
     return(
-        <div>
+        <div className="edit-activity-container">
             <form onSubmit={handleSubmit}>
                 <label htmlFor="titulo">Titulo</label>
                 <input type="text" name="titulo" id="titulo" defaultValue={atividade.titulo}/>

@@ -35,13 +35,18 @@ export default function Atividades(){
     return(
         <div>
             <h1>Atividades</h1>
-            <p><Link to="../nova_atividade">Nova Atividade</Link></p>
+            <div className="button-container">
+                <p><Link to="../nova_atividade">Nova Atividade</Link></p>
+            </div>
+            
 
+            <div className="content-div">
             {atividades!=undefined && atividades.length>0?
                 atividades.map((atividade)=>{
                     return (<Atividade key={atividade.id} id={atividade.id} id_completa = {atividade.id_completa} titulo={atividade.titulo} descricao={atividade.descricao} data_limite={atividade.data_limite}/>)
                 }):"Não existem atividades pendentes"
             }
+            </div>
 
         </div>
     )

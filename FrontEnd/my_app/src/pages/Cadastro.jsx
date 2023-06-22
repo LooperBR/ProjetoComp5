@@ -40,7 +40,7 @@ export default function Cadastro(){
     }
 
     return(
-    <div>
+    <div className="login-container">
         <h1>Cadastro</h1>
         <form onSubmit={handleSubmit}>
             <label htmlFor="nome">nome:</label>
@@ -57,7 +57,7 @@ export default function Cadastro(){
             <br></br>
             <input type="submit" value="Cadastrar" />
         </form>
-        <Link to="/"><button>Fazer Login</button></Link>
+        <Link to="/"><button className="register-button">Fazer Login</button></Link>
     </div>
       )
 }

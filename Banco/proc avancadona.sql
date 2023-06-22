@@ -1,5 +1,5 @@
 DELIMITER $$
-CREATE PROCEDURE cria_atividade_completacao(in p_id_atividade INT)
+CREATE PROCEDURE cria_atividade_completacao(in p_id_atividade INT,in p_aumenta_nivel INT,in p_id_usuario INT)
 BEGIN
 	
 	DECLARE v_dias_diff INT;
@@ -10,8 +10,11 @@ BEGIN
 	
 	CREATE TEMPORARY TABLE TempAtividades (id INT,horario_repeticao TIME,dia_semana INT,diferenca INT); 
 	
+	if p_aumenta_nivel = 1 then
+		update usuario SET xp = 0, nivel = nivel+1 WHERE xp>=100;
+	END if;
+	
 	if p_id_atividade = 0 then
-		update usuario SET xp = 0, nivel = nivel+=1 WHERE xp>=100
 	
 		INSERT INTO TempAtividades(id,horario_repeticao,dia_semana)
 			SELECT 
@@ -23,7 +26,8 @@ BEGIN
 			FROM atividade a
 			LEFT JOIN atividade_completacao ac ON ac.atividade_id = a.id AND ac.data_fim>NOW()
 			WHERE repete = 1 
-			AND ac.id IS NULL;
+			AND ac.id IS NULL
+			AND (a.usuario_id = p_id_usuario OR p_id_usuario = 0);
 			
 		UPDATE TempAtividades SET diferenca = (DAYOFWEEK(NOW()) - dia_semana)*-1;
 	
@@ -65,7 +69,7 @@ CREATE EVENT cria_evento_repetido
 ON SCHEDULE EVERY 24 HOUR 
 STARTS '2023-06-13 23:55:00'
 DO
-   CALL cria_atividade_completacao(0);
+   CALL cria_atividade_completacao(0,1,0);
 
 -- SHOW PROCESSLIST;
 -- SHOW EVENTS FROM agenda_atividades;

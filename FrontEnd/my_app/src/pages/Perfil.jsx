@@ -71,7 +71,7 @@ export default function Perfil(){
     }
 
     return(
-        <div>
+        <div className="profile">
             <h1>Perfil</h1>
             <img src={require("../public/basico.png")} alt="avatar" />
             <p>Nome: {usuario.nome}</p>

@@ -9,7 +9,7 @@ function NavBar() {
         console.log("teste")
     }
     return (
-        <nav>
+        <nav className="header">
             <ul>
                 <li>
                     <Link to="home">Home</Link>
