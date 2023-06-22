@@ -82,7 +82,7 @@ export default function NovaAtividade() {
         }
     }
     return (
-        <div>
+        <div className="edit-activity-container">
             <h1>Nova Atividade</h1>
             <form onSubmit={handleSubmit}>
                 <label htmlFor="titulo">Titulo</label>
